@@ -1,0 +1,59 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/opt/data/private/wzf/u_shapley/shapley_accelerated/test.py",
+            "console": "integratedTerminal",
+            // "args": [
+            //     ""
+            // ]
+        },
+        {
+            "name": "grad_benchmark_adult",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/opt/data/private/wzf/u_shapley/shapley_accelerated/grad_benchmark_adult.py",
+            "console": "integratedTerminal",
+            // "args": [
+            //     ""
+            // ]
+        },
+        {
+            "name": "Python: Train Model",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/opt/data/private/wzf/u_shapley/pruning_segmentation/train.py", // 确保路径正确指向train.py
+            "console": "integratedTerminal",
+            "args": [
+                "--dataset",
+                "/opt/data/private/wzf/u_shapley/BUSI_all",
+                "--arch",
+                "UNet",
+                "--name",
+                "busi_unet_shapley_400",
+                "--img_ext",
+                ".png",
+                "--mask_ext",
+                "_mask.png",
+                "--lr",
+                "0.001",
+                "--epochs",
+                "400",
+                "--b",
+                "8",
+                "--input_w",
+                "256",
+                "--input_h",
+                "256",
+                "--pretrain-path",
+                "/opt/data/private/wzf/u_shapley/pruning_segmentation/models/pretrain_400_unet_shuffle/model.pth",
+                "--pruning",
+                "--strategy",
+                "shapley"
+            ]
+        }
+    ]
+}

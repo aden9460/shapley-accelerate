@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./credit-dataset",
+        "./adult-dataset"
+    ]
+}
