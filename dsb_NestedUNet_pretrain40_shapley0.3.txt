@@ -1,0 +1,972 @@
+--------------------
+name: dsb_NestedUNet_pretrain40_shapley0.3
+epochs: 400
+batch_size: 8
+arch: NestedUNet
+deep_supervision: False
+input_channels: 3
+num_classes: 1
+input_w: 96
+input_h: 96
+loss: BCEDiceLoss
+dataset: /opt/data/private/wzf/u_shapley/dsb-unet++/dsb2018_96/
+img_ext: .png
+mask_ext: .png
+optimizer: Adam
+lr: 0.001
+momentum: 0.9
+weight_decay: 0.0001
+nesterov: False
+scheduler: CosineAnnealingLR
+min_lr: 1e-05
+factor: 0.1
+patience: 2
+milestones: 1,2
+gamma: 0.6666666666666666
+early_stopping: -1
+cfg: None
+num_workers: 4
+pruning: True
+debug: False
+strategy: shapley
+pruning_percentage: 0.3
+pretrain: True
+pretrain_path: models/dsb_NestedUNet_pretrain40/model.pth
+sample_ratio: None
+--------------------
+Load pretrained model from: models/dsb_NestedUNet_pretrain40/model.pth
+[INFO] Register zero_ops() for <class 'torch.nn.modules.pooling.MaxPool2d'>.
+[INFO] Register count_upsample() for <class 'torch.nn.modules.upsampling.Upsample'>.
+[INFO] Register zero_ops() for <class 'torch.nn.modules.activation.ReLU'>.
+[INFO] Register count_convNd() for <class 'torch.nn.modules.conv.Conv2d'>.
+[INFO] Register count_normalization() for <class 'torch.nn.modules.batchnorm.BatchNorm2d'>.
+Original FLOPs: 4.908G
+Original Params: 9.163M
+/opt/data/private/wzf/u_shapley/dsb-unet++/dsb2018_96/images.png
+[INFO] Register zero_ops() for <class 'torch.nn.modules.pooling.MaxPool2d'>.
+[INFO] Register count_upsample() for <class 'torch.nn.modules.upsampling.Upsample'>.
+[INFO] Register zero_ops() for <class 'torch.nn.modules.activation.ReLU'>.
+[INFO] Register count_convNd() for <class 'torch.nn.modules.conv.Conv2d'>.
+[INFO] Register count_normalization() for <class 'torch.nn.modules.batchnorm.BatchNorm2d'>.
+Pruned FLOPs: 770.148M
+Pruned Params: 176.588K
+FLOPs reduction percentage: 84.31%
+Params reduction percentage: 98.07%
+=====Pruned Model: =====
+NestedUNet(
+  (pool): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (up): Upsample(scale_factor=2.0, mode='bilinear')
+  (conv0_0): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(3, 30, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(30, 15, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(15, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv1_0): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(15, 43, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(43, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(43, 30, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv2_0): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(30, 19, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(19, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(19, 17, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(17, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv3_0): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(17, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(4, 5, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv4_0): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(5, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(512, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(2, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv0_1): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(45, 30, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(30, 15, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(15, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv1_1): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(47, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(3, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(3, 9, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(9, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv2_1): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(22, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(128, 8, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv3_1): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(7, 5, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(5, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(5, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(2, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv0_2): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(39, 24, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(24, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(24, 15, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(15, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv1_2): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(47, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(1, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(1, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(1, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv2_2): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(27, 4, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(4, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(4, 10, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(10, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv0_3): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(46, 23, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(23, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(23, 15, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(15, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv1_3): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(50, 6, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(6, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(6, 15, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(15, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv0_4): VGGBlock(
+    (relu): ReLU(inplace=True)
+    (conv1): Conv2d(75, 30, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn1): BatchNorm2d(30, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (conv2): Conv2d(30, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (bn2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (final): Conv2d(28, 1, kernel_size=(1, 1), stride=(1, 1))
+)
+Epoch [0/400]
+loss 0.1320 - iou 0.8601 - val_loss 0.7442 - val_iou 0.3684
+=> saved best model
+Epoch [1/400]
+loss 0.1166 - iou 0.8737 - val_loss 0.4678 - val_iou 0.5524
+=> saved best model
+Epoch [2/400]
+loss 0.1102 - iou 0.8819 - val_loss 0.1800 - val_iou 0.8091
+=> saved best model
+Epoch [3/400]
+loss 0.1176 - iou 0.8731 - val_loss 0.5579 - val_iou 0.5108
+Epoch [4/400]
+loss 0.1274 - iou 0.8656 - val_loss 1.0556 - val_iou 0.2492
+Epoch [5/400]
+loss 0.1240 - iou 0.8687 - val_loss 0.5463 - val_iou 0.5187
+Epoch [6/400]
+loss 0.1162 - iou 0.8748 - val_loss 0.2299 - val_iou 0.7359
+Epoch [7/400]
+loss 0.1088 - iou 0.8819 - val_loss 0.9436 - val_iou 0.3061
+Epoch [8/400]
+loss 0.1139 - iou 0.8798 - val_loss 0.3141 - val_iou 0.6549
+Epoch [9/400]
+loss 0.1140 - iou 0.8785 - val_loss 0.5707 - val_iou 0.4970
+Epoch [10/400]
+loss 0.1299 - iou 0.8612 - val_loss 0.3250 - val_iou 0.6623
+Epoch [11/400]
+loss 0.1186 - iou 0.8715 - val_loss 0.2315 - val_iou 0.7930
+Epoch [12/400]
+loss 0.1097 - iou 0.8798 - val_loss 0.2024 - val_iou 0.7838
+Epoch [13/400]
+loss 0.1076 - iou 0.8826 - val_loss 0.4397 - val_iou 0.6244
+Epoch [14/400]
+loss 0.1054 - iou 0.8876 - val_loss 0.1795 - val_iou 0.8073
+Epoch [15/400]
+loss 0.1013 - iou 0.8933 - val_loss 0.4689 - val_iou 0.5868
+Epoch [16/400]
+loss 0.1037 - iou 0.8890 - val_loss 0.3755 - val_iou 0.6432
+Epoch [17/400]
+loss 0.1023 - iou 0.8905 - val_loss 0.1773 - val_iou 0.8144
+=> saved best model
+Epoch [18/400]
+loss 0.1041 - iou 0.8889 - val_loss 0.2743 - val_iou 0.7110
+Epoch [19/400]
+loss 0.1043 - iou 0.8894 - val_loss 0.6803 - val_iou 0.4298
+Epoch [20/400]
+loss 0.1111 - iou 0.8809 - val_loss 0.7507 - val_iou 0.3442
+Epoch [21/400]
+loss 0.1201 - iou 0.8693 - val_loss 0.4324 - val_iou 0.6115
+Epoch [22/400]
+loss 0.1107 - iou 0.8809 - val_loss 0.4424 - val_iou 0.5541
+Epoch [23/400]
+loss 0.1094 - iou 0.8827 - val_loss 0.1776 - val_iou 0.8103
+Epoch [24/400]
+loss 0.1018 - iou 0.8913 - val_loss 0.8151 - val_iou 0.3606
+Epoch [25/400]
+loss 0.1547 - iou 0.8374 - val_loss 0.2329 - val_iou 0.7417
+Epoch [26/400]
+loss 0.1370 - iou 0.8540 - val_loss 0.1901 - val_iou 0.7959
+Epoch [27/400]
+loss 0.1231 - iou 0.8697 - val_loss 0.5628 - val_iou 0.4790
+Epoch [28/400]
+loss 0.1192 - iou 0.8710 - val_loss 0.9448 - val_iou 0.2807
+Epoch [29/400]
+loss 0.1229 - iou 0.8664 - val_loss 0.5299 - val_iou 0.5420
+Epoch [30/400]
+loss 0.1153 - iou 0.8764 - val_loss 0.2424 - val_iou 0.7176
+Epoch [31/400]
+loss 0.1116 - iou 0.8805 - val_loss 0.3493 - val_iou 0.6814
+Epoch [32/400]
+loss 0.1121 - iou 0.8782 - val_loss 0.5933 - val_iou 0.4790
+Epoch [33/400]
+loss 0.1080 - iou 0.8841 - val_loss 0.4330 - val_iou 0.5899
+Epoch [34/400]
+loss 0.1073 - iou 0.8839 - val_loss 0.7388 - val_iou 0.3834
+Epoch [35/400]
+loss 0.1053 - iou 0.8864 - val_loss 0.3972 - val_iou 0.6058
+Epoch [36/400]
+loss 0.1067 - iou 0.8854 - val_loss 0.9232 - val_iou 0.3341
+Epoch [37/400]
+loss 0.1069 - iou 0.8847 - val_loss 0.3123 - val_iou 0.6664
+Epoch [38/400]
+loss 0.1029 - iou 0.8889 - val_loss 0.3669 - val_iou 0.6340
+Epoch [39/400]
+loss 0.1045 - iou 0.8874 - val_loss 0.6686 - val_iou 0.3962
+Epoch [40/400]
+loss 0.1026 - iou 0.8900 - val_loss 0.1867 - val_iou 0.8004
+Epoch [41/400]
+loss 0.1011 - iou 0.8920 - val_loss 0.5394 - val_iou 0.5132
+Epoch [42/400]
+loss 0.1076 - iou 0.8842 - val_loss 0.1972 - val_iou 0.7906
+Epoch [43/400]
+loss 0.1043 - iou 0.8890 - val_loss 0.2940 - val_iou 0.6926
+Epoch [44/400]
+loss 0.1019 - iou 0.8911 - val_loss 0.2695 - val_iou 0.7320
+Epoch [45/400]
+loss 0.0995 - iou 0.8920 - val_loss 0.2143 - val_iou 0.7740
+Epoch [46/400]
+loss 0.1003 - iou 0.8924 - val_loss 0.3356 - val_iou 0.6723
+Epoch [47/400]
+loss 0.1013 - iou 0.8908 - val_loss 0.2711 - val_iou 0.6986
+Epoch [48/400]
+loss 0.1073 - iou 0.8839 - val_loss 0.4444 - val_iou 0.5691
+Epoch [49/400]
+loss 0.1104 - iou 0.8805 - val_loss 0.4508 - val_iou 0.5877
+Epoch [50/400]
+loss 0.1107 - iou 0.8777 - val_loss 0.7311 - val_iou 0.3828
+Epoch [51/400]
+loss 0.1137 - iou 0.8785 - val_loss 0.2269 - val_iou 0.7578
+Epoch [52/400]
+loss 0.1089 - iou 0.8830 - val_loss 1.0601 - val_iou 0.2755
+Epoch [53/400]
+loss 0.1035 - iou 0.8867 - val_loss 0.1875 - val_iou 0.8047
+Epoch [54/400]
+loss 0.1013 - iou 0.8915 - val_loss 0.3867 - val_iou 0.6141
+Epoch [55/400]
+loss 0.0989 - iou 0.8929 - val_loss 0.2053 - val_iou 0.7780
+Epoch [56/400]
+loss 0.0967 - iou 0.8971 - val_loss 0.3559 - val_iou 0.6404
+Epoch [57/400]
+loss 0.0972 - iou 0.8956 - val_loss 0.4267 - val_iou 0.5905
+Epoch [58/400]
+loss 0.1009 - iou 0.8920 - val_loss 0.2513 - val_iou 0.7085
+Epoch [59/400]
+loss 0.0984 - iou 0.8957 - val_loss 0.5740 - val_iou 0.5270
+Epoch [60/400]
+loss 0.1000 - iou 0.8936 - val_loss 0.3667 - val_iou 0.6268
+Epoch [61/400]
+loss 0.1002 - iou 0.8913 - val_loss 0.4279 - val_iou 0.5900
+Epoch [62/400]
+loss 0.1029 - iou 0.8894 - val_loss 0.4485 - val_iou 0.5485
+Epoch [63/400]
+loss 0.1133 - iou 0.8781 - val_loss 0.7031 - val_iou 0.4084
+Epoch [64/400]
+loss 0.1290 - iou 0.8639 - val_loss 0.6623 - val_iou 0.4406
+Epoch [65/400]
+loss 0.1301 - iou 0.8612 - val_loss 1.0614 - val_iou 0.2755
+Epoch [66/400]
+loss 0.1146 - iou 0.8770 - val_loss 0.9006 - val_iou 0.3250
+Epoch [67/400]
+loss 0.1090 - iou 0.8817 - val_loss 1.0316 - val_iou 0.2943
+Epoch [68/400]
+loss 0.1069 - iou 0.8854 - val_loss 0.3963 - val_iou 0.6055
+Epoch [69/400]
+loss 0.1009 - iou 0.8921 - val_loss 0.5168 - val_iou 0.5535
+Epoch [70/400]
+loss 0.0992 - iou 0.8944 - val_loss 0.1805 - val_iou 0.8076
+Epoch [71/400]
+loss 0.0993 - iou 0.8945 - val_loss 0.4197 - val_iou 0.6167
+Epoch [72/400]
+loss 0.0997 - iou 0.8932 - val_loss 0.2591 - val_iou 0.7342
+Epoch [73/400]
+loss 0.0973 - iou 0.8946 - val_loss 0.3372 - val_iou 0.6547
+Epoch [74/400]
+loss 0.0974 - iou 0.8970 - val_loss 0.2392 - val_iou 0.7573
+Epoch [75/400]
+loss 0.1030 - iou 0.8891 - val_loss 0.5364 - val_iou 0.4969
+Epoch [76/400]
+loss 0.1051 - iou 0.8867 - val_loss 0.2792 - val_iou 0.7563
+Epoch [77/400]
+loss 0.0975 - iou 0.8956 - val_loss 0.5220 - val_iou 0.5340
+Epoch [78/400]
+loss 0.1008 - iou 0.8919 - val_loss 0.2159 - val_iou 0.7678
+Epoch [79/400]
+loss 0.1022 - iou 0.8902 - val_loss 0.3870 - val_iou 0.6311
+Epoch [80/400]
+loss 0.0966 - iou 0.8970 - val_loss 0.4960 - val_iou 0.5715
+Epoch [81/400]
+loss 0.0956 - iou 0.8987 - val_loss 0.2519 - val_iou 0.7494
+Epoch [82/400]
+loss 0.0934 - iou 0.9013 - val_loss 0.3094 - val_iou 0.6766
+Epoch [83/400]
+loss 0.0975 - iou 0.8944 - val_loss 0.5583 - val_iou 0.5201
+Epoch [84/400]
+loss 0.0994 - iou 0.8930 - val_loss 0.2202 - val_iou 0.7764
+Epoch [85/400]
+loss 0.1092 - iou 0.8840 - val_loss 0.6192 - val_iou 0.4874
+Epoch [86/400]
+loss 0.1449 - iou 0.8443 - val_loss 0.2228 - val_iou 0.7764
+Epoch [87/400]
+loss 0.1209 - iou 0.8672 - val_loss 0.4728 - val_iou 0.5466
+Epoch [88/400]
+loss 0.1090 - iou 0.8810 - val_loss 0.2707 - val_iou 0.7142
+Epoch [89/400]
+loss 0.1026 - iou 0.8900 - val_loss 0.3708 - val_iou 0.6112
+Epoch [90/400]
+loss 0.1002 - iou 0.8920 - val_loss 0.6275 - val_iou 0.5015
+Epoch [91/400]
+loss 0.0996 - iou 0.8933 - val_loss 0.2694 - val_iou 0.7225
+Epoch [92/400]
+loss 0.0979 - iou 0.8962 - val_loss 0.2871 - val_iou 0.7272
+Epoch [93/400]
+loss 0.0951 - iou 0.8984 - val_loss 0.2032 - val_iou 0.7814
+Epoch [94/400]
+loss 0.0954 - iou 0.8975 - val_loss 0.4004 - val_iou 0.6236
+Epoch [95/400]
+loss 0.0950 - iou 0.8988 - val_loss 0.4187 - val_iou 0.5962
+Epoch [96/400]
+loss 0.0958 - iou 0.8964 - val_loss 0.1837 - val_iou 0.8111
+Epoch [97/400]
+loss 0.0966 - iou 0.8960 - val_loss 0.2242 - val_iou 0.7755
+Epoch [98/400]
+loss 0.0937 - iou 0.8999 - val_loss 0.4512 - val_iou 0.5524
+Epoch [99/400]
+loss 0.0935 - iou 0.8999 - val_loss 0.2221 - val_iou 0.7533
+Epoch [100/400]
+loss 0.0920 - iou 0.9022 - val_loss 0.4159 - val_iou 0.6090
+Epoch [101/400]
+loss 0.0941 - iou 0.8993 - val_loss 0.1809 - val_iou 0.8057
+Epoch [102/400]
+loss 0.0935 - iou 0.9004 - val_loss 0.6282 - val_iou 0.4675
+Epoch [103/400]
+loss 0.0916 - iou 0.9034 - val_loss 0.1937 - val_iou 0.7956
+Epoch [104/400]
+loss 0.0926 - iou 0.9004 - val_loss 0.6740 - val_iou 0.4831
+Epoch [105/400]
+loss 0.1103 - iou 0.8794 - val_loss 0.8734 - val_iou 0.3394
+Epoch [106/400]
+loss 0.1021 - iou 0.8904 - val_loss 0.6611 - val_iou 0.4520
+Epoch [107/400]
+loss 0.0954 - iou 0.8984 - val_loss 0.2422 - val_iou 0.7586
+Epoch [108/400]
+loss 0.0961 - iou 0.8956 - val_loss 0.2586 - val_iou 0.7345
+Epoch [109/400]
+loss 0.0938 - iou 0.8987 - val_loss 0.2685 - val_iou 0.7195
+Epoch [110/400]
+loss 0.0944 - iou 0.8992 - val_loss 0.3304 - val_iou 0.6552
+Epoch [111/400]
+loss 0.0924 - iou 0.9033 - val_loss 0.4657 - val_iou 0.5824
+Epoch [112/400]
+loss 0.0902 - iou 0.9034 - val_loss 0.1827 - val_iou 0.8098
+Epoch [113/400]
+loss 0.0941 - iou 0.8996 - val_loss 0.2350 - val_iou 0.7603
+Epoch [114/400]
+loss 0.0987 - iou 0.8951 - val_loss 0.3367 - val_iou 0.6661
+Epoch [115/400]
+loss 0.1031 - iou 0.8873 - val_loss 0.6816 - val_iou 0.4247
+Epoch [116/400]
+loss 0.0965 - iou 0.8970 - val_loss 0.1842 - val_iou 0.8052
+Epoch [117/400]
+loss 0.0928 - iou 0.9013 - val_loss 0.4631 - val_iou 0.6008
+Epoch [118/400]
+loss 0.0904 - iou 0.9037 - val_loss 0.5239 - val_iou 0.5358
+Epoch [119/400]
+loss 0.0933 - iou 0.9000 - val_loss 0.5448 - val_iou 0.4820
+Epoch [120/400]
+loss 0.0922 - iou 0.9030 - val_loss 0.2034 - val_iou 0.7834
+Epoch [121/400]
+loss 0.0947 - iou 0.8999 - val_loss 0.3266 - val_iou 0.7147
+Epoch [122/400]
+loss 0.1222 - iou 0.8661 - val_loss 0.6583 - val_iou 0.4165
+Epoch [123/400]
+loss 0.1104 - iou 0.8810 - val_loss 0.1819 - val_iou 0.8033
+Epoch [124/400]
+loss 0.1028 - iou 0.8892 - val_loss 0.5501 - val_iou 0.5136
+Epoch [125/400]
+loss 0.0960 - iou 0.8964 - val_loss 0.3200 - val_iou 0.6631
+Epoch [126/400]
+loss 0.0926 - iou 0.9011 - val_loss 0.1849 - val_iou 0.8045
+Epoch [127/400]
+loss 0.0906 - iou 0.9040 - val_loss 0.2201 - val_iou 0.7744
+Epoch [128/400]
+loss 0.0895 - iou 0.9050 - val_loss 0.4014 - val_iou 0.6641
+Epoch [129/400]
+loss 0.0898 - iou 0.9039 - val_loss 0.2058 - val_iou 0.7870
+Epoch [130/400]
+loss 0.0879 - iou 0.9076 - val_loss 0.2131 - val_iou 0.7670
+Epoch [131/400]
+loss 0.0871 - iou 0.9083 - val_loss 0.2426 - val_iou 0.7564
+Epoch [132/400]
+loss 0.0880 - iou 0.9073 - val_loss 0.1832 - val_iou 0.8054
+Epoch [133/400]
+loss 0.0895 - iou 0.9052 - val_loss 0.7313 - val_iou 0.4120
+Epoch [134/400]
+loss 0.0883 - iou 0.9051 - val_loss 0.6441 - val_iou 0.4829
+Epoch [135/400]
+loss 0.0913 - iou 0.9020 - val_loss 0.5879 - val_iou 0.4929
+Epoch [136/400]
+loss 0.0904 - iou 0.9051 - val_loss 0.3105 - val_iou 0.6629
+Epoch [137/400]
+loss 0.0899 - iou 0.9043 - val_loss 0.5341 - val_iou 0.5543
+Epoch [138/400]
+loss 0.0907 - iou 0.9032 - val_loss 0.4127 - val_iou 0.5886
+Epoch [139/400]
+loss 0.0901 - iou 0.9049 - val_loss 0.3041 - val_iou 0.6729
+Epoch [140/400]
+loss 0.0884 - iou 0.9065 - val_loss 0.3353 - val_iou 0.6604
+Epoch [141/400]
+loss 0.0868 - iou 0.9087 - val_loss 0.3613 - val_iou 0.6458
+Epoch [142/400]
+loss 0.0882 - iou 0.9073 - val_loss 0.2116 - val_iou 0.7694
+Epoch [143/400]
+loss 0.0995 - iou 0.8930 - val_loss 1.1774 - val_iou 0.2373
+Epoch [144/400]
+loss 0.1140 - iou 0.8785 - val_loss 0.2967 - val_iou 0.6879
+Epoch [145/400]
+loss 0.0987 - iou 0.8934 - val_loss 0.2700 - val_iou 0.7077
+Epoch [146/400]
+loss 0.0920 - iou 0.9009 - val_loss 0.2271 - val_iou 0.7583
+Epoch [147/400]
+loss 0.0894 - iou 0.9068 - val_loss 0.3650 - val_iou 0.6591
+Epoch [148/400]
+loss 0.0887 - iou 0.9073 - val_loss 0.1796 - val_iou 0.8059
+Epoch [149/400]
+loss 0.0885 - iou 0.9062 - val_loss 0.2606 - val_iou 0.7365
+Epoch [150/400]
+loss 0.0879 - iou 0.9067 - val_loss 0.3393 - val_iou 0.7146
+Epoch [151/400]
+loss 0.0868 - iou 0.9081 - val_loss 0.4974 - val_iou 0.5478
+Epoch [152/400]
+loss 0.0910 - iou 0.9039 - val_loss 0.1929 - val_iou 0.7912
+Epoch [153/400]
+loss 0.1033 - iou 0.8900 - val_loss 0.3339 - val_iou 0.6542
+Epoch [154/400]
+loss 0.0922 - iou 0.9007 - val_loss 0.3532 - val_iou 0.6800
+Epoch [155/400]
+loss 0.0905 - iou 0.9036 - val_loss 0.3028 - val_iou 0.7259
+Epoch [156/400]
+loss 0.0875 - iou 0.9074 - val_loss 0.1840 - val_iou 0.8055
+Epoch [157/400]
+loss 0.0852 - iou 0.9115 - val_loss 0.2018 - val_iou 0.7918
+Epoch [158/400]
+loss 0.0893 - iou 0.9048 - val_loss 0.5049 - val_iou 0.5845
+Epoch [159/400]
+loss 0.0865 - iou 0.9093 - val_loss 0.3267 - val_iou 0.6943
+Epoch [160/400]
+loss 0.0858 - iou 0.9096 - val_loss 0.1848 - val_iou 0.8091
+Epoch [161/400]
+loss 0.0850 - iou 0.9108 - val_loss 0.1791 - val_iou 0.8139
+Epoch [162/400]
+loss 0.0846 - iou 0.9107 - val_loss 0.5259 - val_iou 0.5449
+Epoch [163/400]
+loss 0.0857 - iou 0.9101 - val_loss 0.4617 - val_iou 0.5736
+Epoch [164/400]
+loss 0.0848 - iou 0.9105 - val_loss 0.2605 - val_iou 0.7260
+Epoch [165/400]
+loss 0.0849 - iou 0.9126 - val_loss 0.1959 - val_iou 0.7904
+Epoch [166/400]
+loss 0.0869 - iou 0.9086 - val_loss 0.6576 - val_iou 0.4661
+Epoch [167/400]
+loss 0.0881 - iou 0.9066 - val_loss 0.2929 - val_iou 0.7193
+Epoch [168/400]
+loss 0.0893 - iou 0.9060 - val_loss 0.4425 - val_iou 0.5781
+Epoch [169/400]
+loss 0.0863 - iou 0.9106 - val_loss 0.6839 - val_iou 0.4407
+Epoch [170/400]
+loss 0.0847 - iou 0.9114 - val_loss 0.3498 - val_iou 0.6565
+Epoch [171/400]
+loss 0.0833 - iou 0.9145 - val_loss 0.4723 - val_iou 0.6005
+Epoch [172/400]
+loss 0.0832 - iou 0.9131 - val_loss 0.3635 - val_iou 0.6448
+Epoch [173/400]
+loss 0.0848 - iou 0.9130 - val_loss 0.7930 - val_iou 0.3693
+Epoch [174/400]
+loss 0.0875 - iou 0.9087 - val_loss 0.1884 - val_iou 0.8000
+Epoch [175/400]
+loss 0.0843 - iou 0.9118 - val_loss 0.4730 - val_iou 0.5566
+Epoch [176/400]
+loss 0.0835 - iou 0.9134 - val_loss 0.6755 - val_iou 0.4552
+Epoch [177/400]
+loss 0.0837 - iou 0.9133 - val_loss 0.3770 - val_iou 0.6649
+Epoch [178/400]
+loss 0.0835 - iou 0.9132 - val_loss 0.2309 - val_iou 0.7835
+Epoch [179/400]
+loss 0.0823 - iou 0.9157 - val_loss 0.4745 - val_iou 0.5830
+Epoch [180/400]
+loss 0.0855 - iou 0.9118 - val_loss 0.2260 - val_iou 0.7701
+Epoch [181/400]
+loss 0.0829 - iou 0.9146 - val_loss 0.3439 - val_iou 0.6582
+Epoch [182/400]
+loss 0.0857 - iou 0.9103 - val_loss 0.1867 - val_iou 0.8089
+Epoch [183/400]
+loss 0.0861 - iou 0.9103 - val_loss 0.3419 - val_iou 0.6532
+Epoch [184/400]
+loss 0.0845 - iou 0.9119 - val_loss 0.2355 - val_iou 0.7521
+Epoch [185/400]
+loss 0.0828 - iou 0.9141 - val_loss 0.3415 - val_iou 0.6581
+Epoch [186/400]
+loss 0.0808 - iou 0.9166 - val_loss 0.2919 - val_iou 0.6989
+Epoch [187/400]
+loss 0.0804 - iou 0.9183 - val_loss 0.1986 - val_iou 0.7877
+Epoch [188/400]
+loss 0.0800 - iou 0.9189 - val_loss 0.2814 - val_iou 0.7122
+Epoch [189/400]
+loss 0.0827 - iou 0.9140 - val_loss 0.1873 - val_iou 0.8057
+Epoch [190/400]
+loss 0.0834 - iou 0.9133 - val_loss 0.3608 - val_iou 0.6674
+Epoch [191/400]
+loss 0.0817 - iou 0.9156 - val_loss 1.0142 - val_iou 0.3165
+Epoch [192/400]
+loss 0.0803 - iou 0.9175 - val_loss 0.2955 - val_iou 0.6944
+Epoch [193/400]
+loss 0.0809 - iou 0.9173 - val_loss 0.2146 - val_iou 0.7839
+Epoch [194/400]
+loss 0.0820 - iou 0.9147 - val_loss 0.2232 - val_iou 0.7596
+Epoch [195/400]
+loss 0.0807 - iou 0.9172 - val_loss 0.1789 - val_iou 0.8150
+=> saved best model
+Epoch [196/400]
+loss 0.0795 - iou 0.9203 - val_loss 0.1848 - val_iou 0.8121
+Epoch [197/400]
+loss 0.0813 - iou 0.9168 - val_loss 0.2314 - val_iou 0.7522
+Epoch [198/400]
+loss 0.0851 - iou 0.9111 - val_loss 0.5691 - val_iou 0.5370
+Epoch [199/400]
+loss 0.0908 - iou 0.9040 - val_loss 0.3812 - val_iou 0.6390
+Epoch [200/400]
+loss 0.0919 - iou 0.9037 - val_loss 0.1880 - val_iou 0.7996
+Epoch [201/400]
+loss 0.0922 - iou 0.9038 - val_loss 0.3809 - val_iou 0.6198
+Epoch [202/400]
+loss 0.0872 - iou 0.9079 - val_loss 0.1761 - val_iou 0.8150
+Epoch [203/400]
+loss 0.0821 - iou 0.9153 - val_loss 0.1832 - val_iou 0.8093
+Epoch [204/400]
+loss 0.0814 - iou 0.9156 - val_loss 0.2680 - val_iou 0.7419
+Epoch [205/400]
+loss 0.0808 - iou 0.9172 - val_loss 0.4047 - val_iou 0.6192
+Epoch [206/400]
+loss 0.0787 - iou 0.9199 - val_loss 0.1738 - val_iou 0.8193
+=> saved best model
+Epoch [207/400]
+loss 0.0780 - iou 0.9215 - val_loss 0.1745 - val_iou 0.8230
+=> saved best model
+Epoch [208/400]
+loss 0.0783 - iou 0.9203 - val_loss 0.3574 - val_iou 0.6832
+Epoch [209/400]
+loss 0.0793 - iou 0.9186 - val_loss 0.1784 - val_iou 0.8158
+Epoch [210/400]
+loss 0.0787 - iou 0.9199 - val_loss 0.2106 - val_iou 0.7902
+Epoch [211/400]
+loss 0.0786 - iou 0.9205 - val_loss 0.5806 - val_iou 0.4838
+Epoch [212/400]
+loss 0.0776 - iou 0.9220 - val_loss 0.2549 - val_iou 0.7389
+Epoch [213/400]
+loss 0.0780 - iou 0.9209 - val_loss 0.1867 - val_iou 0.8091
+Epoch [214/400]
+loss 0.0779 - iou 0.9208 - val_loss 0.2546 - val_iou 0.7377
+Epoch [215/400]
+loss 0.0782 - iou 0.9205 - val_loss 0.5968 - val_iou 0.5196
+Epoch [216/400]
+loss 0.0766 - iou 0.9235 - val_loss 0.4612 - val_iou 0.6036
+Epoch [217/400]
+loss 0.0767 - iou 0.9232 - val_loss 0.2129 - val_iou 0.7810
+Epoch [218/400]
+loss 0.0769 - iou 0.9231 - val_loss 0.1812 - val_iou 0.8150
+Epoch [219/400]
+loss 0.0769 - iou 0.9223 - val_loss 0.2228 - val_iou 0.7815
+Epoch [220/400]
+loss 0.0775 - iou 0.9220 - val_loss 0.1837 - val_iou 0.8124
+Epoch [221/400]
+loss 0.0773 - iou 0.9223 - val_loss 0.2002 - val_iou 0.7940
+Epoch [222/400]
+loss 0.0766 - iou 0.9229 - val_loss 0.2563 - val_iou 0.7538
+Epoch [223/400]
+loss 0.0776 - iou 0.9213 - val_loss 0.2211 - val_iou 0.7677
+Epoch [224/400]
+loss 0.0797 - iou 0.9188 - val_loss 0.3057 - val_iou 0.6834
+Epoch [225/400]
+loss 0.0781 - iou 0.9214 - val_loss 0.2850 - val_iou 0.7061
+Epoch [226/400]
+loss 0.0809 - iou 0.9171 - val_loss 0.2093 - val_iou 0.7932
+Epoch [227/400]
+loss 0.0769 - iou 0.9238 - val_loss 0.3801 - val_iou 0.6507
+Epoch [228/400]
+loss 0.0756 - iou 0.9249 - val_loss 0.1839 - val_iou 0.8137
+Epoch [229/400]
+loss 0.0755 - iou 0.9243 - val_loss 0.2007 - val_iou 0.7906
+Epoch [230/400]
+loss 0.0771 - iou 0.9230 - val_loss 0.1935 - val_iou 0.8026
+Epoch [231/400]
+loss 0.0776 - iou 0.9227 - val_loss 0.3162 - val_iou 0.7129
+Epoch [232/400]
+loss 0.0767 - iou 0.9230 - val_loss 0.3147 - val_iou 0.7381
+Epoch [233/400]
+loss 0.0760 - iou 0.9249 - val_loss 0.1928 - val_iou 0.8030
+Epoch [234/400]
+loss 0.0750 - iou 0.9254 - val_loss 0.1934 - val_iou 0.8037
+Epoch [235/400]
+loss 0.0743 - iou 0.9269 - val_loss 0.1776 - val_iou 0.8189
+Epoch [236/400]
+loss 0.0741 - iou 0.9265 - val_loss 0.2511 - val_iou 0.7487
+Epoch [237/400]
+loss 0.0747 - iou 0.9257 - val_loss 0.1768 - val_iou 0.8181
+Epoch [238/400]
+loss 0.0754 - iou 0.9255 - val_loss 0.4633 - val_iou 0.5644
+Epoch [239/400]
+loss 0.0747 - iou 0.9261 - val_loss 0.1804 - val_iou 0.8157
+Epoch [240/400]
+loss 0.0744 - iou 0.9265 - val_loss 0.1836 - val_iou 0.8101
+Epoch [241/400]
+loss 0.0735 - iou 0.9284 - val_loss 0.2387 - val_iou 0.7548
+Epoch [242/400]
+loss 0.0741 - iou 0.9274 - val_loss 0.8704 - val_iou 0.3525
+Epoch [243/400]
+loss 0.0734 - iou 0.9287 - val_loss 0.2723 - val_iou 0.7299
+Epoch [244/400]
+loss 0.0749 - iou 0.9258 - val_loss 0.3764 - val_iou 0.6737
+Epoch [245/400]
+loss 0.0744 - iou 0.9279 - val_loss 0.2077 - val_iou 0.7923
+Epoch [246/400]
+loss 0.0739 - iou 0.9273 - val_loss 0.1979 - val_iou 0.8014
+Epoch [247/400]
+loss 0.0737 - iou 0.9283 - val_loss 0.1846 - val_iou 0.8124
+Epoch [248/400]
+loss 0.0734 - iou 0.9288 - val_loss 0.6861 - val_iou 0.4580
+Epoch [249/400]
+loss 0.0743 - iou 0.9275 - val_loss 0.2100 - val_iou 0.8004
+Epoch [250/400]
+loss 0.0734 - iou 0.9284 - val_loss 0.1843 - val_iou 0.8123
+Epoch [251/400]
+loss 0.0837 - iou 0.9146 - val_loss 0.2541 - val_iou 0.7481
+Epoch [252/400]
+loss 0.0794 - iou 0.9195 - val_loss 0.1767 - val_iou 0.8176
+Epoch [253/400]
+loss 0.0750 - iou 0.9266 - val_loss 0.1862 - val_iou 0.8077
+Epoch [254/400]
+loss 0.0732 - iou 0.9282 - val_loss 0.1782 - val_iou 0.8173
+Epoch [255/400]
+loss 0.0720 - iou 0.9307 - val_loss 0.1982 - val_iou 0.8002
+Epoch [256/400]
+loss 0.0721 - iou 0.9303 - val_loss 0.1790 - val_iou 0.8177
+Epoch [257/400]
+loss 0.0723 - iou 0.9296 - val_loss 0.1759 - val_iou 0.8224
+Epoch [258/400]
+loss 0.0724 - iou 0.9298 - val_loss 0.2249 - val_iou 0.7731
+Epoch [259/400]
+loss 0.0720 - iou 0.9310 - val_loss 0.1840 - val_iou 0.8131
+Epoch [260/400]
+loss 0.0721 - iou 0.9303 - val_loss 0.2018 - val_iou 0.7850
+Epoch [261/400]
+loss 0.0711 - iou 0.9311 - val_loss 0.2163 - val_iou 0.7792
+Epoch [262/400]
+loss 0.0713 - iou 0.9314 - val_loss 0.1856 - val_iou 0.8119
+Epoch [263/400]
+loss 0.0715 - iou 0.9317 - val_loss 0.1805 - val_iou 0.8174
+Epoch [264/400]
+loss 0.0715 - iou 0.9308 - val_loss 0.2026 - val_iou 0.7920
+Epoch [265/400]
+loss 0.0715 - iou 0.9322 - val_loss 0.1807 - val_iou 0.8168
+Epoch [266/400]
+loss 0.0715 - iou 0.9321 - val_loss 0.1803 - val_iou 0.8175
+Epoch [267/400]
+loss 0.0706 - iou 0.9330 - val_loss 0.1850 - val_iou 0.8127
+Epoch [268/400]
+loss 0.0718 - iou 0.9314 - val_loss 0.1940 - val_iou 0.8059
+Epoch [269/400]
+loss 0.0703 - iou 0.9335 - val_loss 0.1825 - val_iou 0.8147
+Epoch [270/400]
+loss 0.0725 - iou 0.9307 - val_loss 0.2385 - val_iou 0.7489
+Epoch [271/400]
+loss 0.0709 - iou 0.9318 - val_loss 0.1963 - val_iou 0.8018
+Epoch [272/400]
+loss 0.0711 - iou 0.9329 - val_loss 0.1803 - val_iou 0.8174
+Epoch [273/400]
+loss 0.0701 - iou 0.9341 - val_loss 0.1971 - val_iou 0.7986
+Epoch [274/400]
+loss 0.0695 - iou 0.9354 - val_loss 0.2364 - val_iou 0.7733
+Epoch [275/400]
+loss 0.0703 - iou 0.9338 - val_loss 0.1911 - val_iou 0.7992
+Epoch [276/400]
+loss 0.0705 - iou 0.9335 - val_loss 0.1840 - val_iou 0.8165
+Epoch [277/400]
+loss 0.0692 - iou 0.9345 - val_loss 0.1945 - val_iou 0.8030
+Epoch [278/400]
+loss 0.0704 - iou 0.9344 - val_loss 0.2097 - val_iou 0.7870
+Epoch [279/400]
+loss 0.0705 - iou 0.9328 - val_loss 0.1954 - val_iou 0.8000
+Epoch [280/400]
+loss 0.0705 - iou 0.9330 - val_loss 0.1770 - val_iou 0.8192
+Epoch [281/400]
+loss 0.0691 - iou 0.9353 - val_loss 0.1793 - val_iou 0.8157
+Epoch [282/400]
+loss 0.0695 - iou 0.9350 - val_loss 0.1904 - val_iou 0.8089
+Epoch [283/400]
+loss 0.0689 - iou 0.9362 - val_loss 0.2056 - val_iou 0.7967
+Epoch [284/400]
+loss 0.0686 - iou 0.9362 - val_loss 0.1830 - val_iou 0.8169
+Epoch [285/400]
+loss 0.0686 - iou 0.9366 - val_loss 0.1862 - val_iou 0.8121
+Epoch [286/400]
+loss 0.0692 - iou 0.9352 - val_loss 0.2844 - val_iou 0.7311
+Epoch [287/400]
+loss 0.0692 - iou 0.9358 - val_loss 0.1890 - val_iou 0.8102
+Epoch [288/400]
+loss 0.0693 - iou 0.9354 - val_loss 0.1796 - val_iou 0.8186
+Epoch [289/400]
+loss 0.0691 - iou 0.9358 - val_loss 0.1814 - val_iou 0.8180
+Epoch [290/400]
+loss 0.0683 - iou 0.9367 - val_loss 0.1818 - val_iou 0.8176
+Epoch [291/400]
+loss 0.0685 - iou 0.9366 - val_loss 0.1824 - val_iou 0.8171
+Epoch [292/400]
+loss 0.0679 - iou 0.9371 - val_loss 0.1783 - val_iou 0.8195
+Epoch [293/400]
+loss 0.0696 - iou 0.9358 - val_loss 0.1894 - val_iou 0.8092
+Epoch [294/400]
+loss 0.0684 - iou 0.9365 - val_loss 0.1851 - val_iou 0.8134
+Epoch [295/400]
+loss 0.0678 - iou 0.9374 - val_loss 0.1957 - val_iou 0.8026
+Epoch [296/400]
+loss 0.0686 - iou 0.9371 - val_loss 0.1853 - val_iou 0.8126
+Epoch [297/400]
+loss 0.0681 - iou 0.9373 - val_loss 0.1866 - val_iou 0.8081
+Epoch [298/400]
+loss 0.0684 - iou 0.9371 - val_loss 0.1790 - val_iou 0.8195
+Epoch [299/400]
+loss 0.0683 - iou 0.9377 - val_loss 0.1832 - val_iou 0.8151
+Epoch [300/400]
+loss 0.0676 - iou 0.9381 - val_loss 0.1802 - val_iou 0.8171
+Epoch [301/400]
+loss 0.0673 - iou 0.9389 - val_loss 0.1889 - val_iou 0.8102
+Epoch [302/400]
+loss 0.0675 - iou 0.9382 - val_loss 0.2033 - val_iou 0.7935
+Epoch [303/400]
+loss 0.0674 - iou 0.9392 - val_loss 0.2255 - val_iou 0.7891
+Epoch [304/400]
+loss 0.0675 - iou 0.9390 - val_loss 0.1813 - val_iou 0.8161
+Epoch [305/400]
+loss 0.0677 - iou 0.9383 - val_loss 0.1849 - val_iou 0.8141
+Epoch [306/400]
+loss 0.0670 - iou 0.9390 - val_loss 0.1808 - val_iou 0.8183
+Epoch [307/400]
+loss 0.0666 - iou 0.9398 - val_loss 0.1847 - val_iou 0.8157
+Epoch [308/400]
+loss 0.0673 - iou 0.9386 - val_loss 0.1910 - val_iou 0.8093
+Epoch [309/400]
+loss 0.0672 - iou 0.9391 - val_loss 0.1836 - val_iou 0.8158
+Epoch [310/400]
+loss 0.0669 - iou 0.9401 - val_loss 0.1868 - val_iou 0.8138
+Epoch [311/400]
+loss 0.0664 - iou 0.9402 - val_loss 0.1876 - val_iou 0.8132
+Epoch [312/400]
+loss 0.0664 - iou 0.9404 - val_loss 0.1830 - val_iou 0.8179
+Epoch [313/400]
+loss 0.0667 - iou 0.9400 - val_loss 0.1871 - val_iou 0.8151
+Epoch [314/400]
+loss 0.0662 - iou 0.9401 - val_loss 0.1878 - val_iou 0.8131
+Epoch [315/400]
+loss 0.0667 - iou 0.9396 - val_loss 0.1842 - val_iou 0.8139
+Epoch [316/400]
+loss 0.0669 - iou 0.9392 - val_loss 0.1869 - val_iou 0.8141
+Epoch [317/400]
+loss 0.0664 - iou 0.9400 - val_loss 0.1826 - val_iou 0.8164
+Epoch [318/400]
+loss 0.0666 - iou 0.9403 - val_loss 0.1834 - val_iou 0.8160
+Epoch [319/400]
+loss 0.0664 - iou 0.9404 - val_loss 0.1888 - val_iou 0.8116
+Epoch [320/400]
+loss 0.0665 - iou 0.9406 - val_loss 0.1824 - val_iou 0.8159
+Epoch [321/400]
+loss 0.0665 - iou 0.9393 - val_loss 0.1852 - val_iou 0.8131
+Epoch [322/400]
+loss 0.0659 - iou 0.9415 - val_loss 0.1826 - val_iou 0.8171
+Epoch [323/400]
+loss 0.0659 - iou 0.9411 - val_loss 0.1824 - val_iou 0.8175
+Epoch [324/400]
+loss 0.0659 - iou 0.9411 - val_loss 0.1838 - val_iou 0.8172
+Epoch [325/400]
+loss 0.0661 - iou 0.9415 - val_loss 0.1845 - val_iou 0.8152
+Epoch [326/400]
+loss 0.0654 - iou 0.9423 - val_loss 0.1827 - val_iou 0.8173
+Epoch [327/400]
+loss 0.0652 - iou 0.9425 - val_loss 0.1836 - val_iou 0.8174
+Epoch [328/400]
+loss 0.0654 - iou 0.9421 - val_loss 0.1866 - val_iou 0.8135
+Epoch [329/400]
+loss 0.0654 - iou 0.9426 - val_loss 0.1855 - val_iou 0.8155
+Epoch [330/400]
+loss 0.0651 - iou 0.9429 - val_loss 0.1830 - val_iou 0.8175
+Epoch [331/400]
+loss 0.0652 - iou 0.9429 - val_loss 0.1851 - val_iou 0.8158
+Epoch [332/400]
+loss 0.0659 - iou 0.9414 - val_loss 0.1863 - val_iou 0.8123
+Epoch [333/400]
+loss 0.0653 - iou 0.9431 - val_loss 0.1861 - val_iou 0.8141
+Epoch [334/400]
+loss 0.0655 - iou 0.9426 - val_loss 0.1834 - val_iou 0.8151
+Epoch [335/400]
+loss 0.0650 - iou 0.9432 - val_loss 0.1874 - val_iou 0.8143
+Epoch [336/400]
+loss 0.0651 - iou 0.9436 - val_loss 0.1861 - val_iou 0.8136
+Epoch [337/400]
+loss 0.0649 - iou 0.9433 - val_loss 0.1846 - val_iou 0.8157
+Epoch [338/400]
+loss 0.0651 - iou 0.9423 - val_loss 0.1844 - val_iou 0.8161
+Epoch [339/400]
+loss 0.0645 - iou 0.9436 - val_loss 0.1853 - val_iou 0.8164
+Epoch [340/400]
+loss 0.0649 - iou 0.9440 - val_loss 0.1851 - val_iou 0.8160
+Epoch [341/400]
+loss 0.0646 - iou 0.9436 - val_loss 0.1876 - val_iou 0.8151
+Epoch [342/400]
+loss 0.0645 - iou 0.9435 - val_loss 0.1847 - val_iou 0.8169
+Epoch [343/400]
+loss 0.0648 - iou 0.9439 - val_loss 0.1828 - val_iou 0.8173
+Epoch [344/400]
+loss 0.0644 - iou 0.9447 - val_loss 0.1840 - val_iou 0.8159
+Epoch [345/400]
+loss 0.0654 - iou 0.9424 - val_loss 0.1827 - val_iou 0.8178
+Epoch [346/400]
+loss 0.0641 - iou 0.9447 - val_loss 0.1848 - val_iou 0.8164
+Epoch [347/400]
+loss 0.0648 - iou 0.9433 - val_loss 0.1880 - val_iou 0.8145
+Epoch [348/400]
+loss 0.0643 - iou 0.9446 - val_loss 0.1841 - val_iou 0.8161
+Epoch [349/400]
+loss 0.0647 - iou 0.9435 - val_loss 0.1838 - val_iou 0.8164
+Epoch [350/400]
+loss 0.0644 - iou 0.9442 - val_loss 0.1871 - val_iou 0.8156
+Epoch [351/400]
+loss 0.0648 - iou 0.9438 - val_loss 0.1844 - val_iou 0.8165
+Epoch [352/400]
+loss 0.0648 - iou 0.9436 - val_loss 0.1842 - val_iou 0.8170
+Epoch [353/400]
+loss 0.0643 - iou 0.9440 - val_loss 0.1855 - val_iou 0.8161
+Epoch [354/400]
+loss 0.0638 - iou 0.9454 - val_loss 0.1853 - val_iou 0.8160
+Epoch [355/400]
+loss 0.0647 - iou 0.9433 - val_loss 0.1851 - val_iou 0.8175
+Epoch [356/400]
+loss 0.0642 - iou 0.9444 - val_loss 0.1859 - val_iou 0.8153
+Epoch [357/400]
+loss 0.0640 - iou 0.9446 - val_loss 0.1859 - val_iou 0.8158
+Epoch [358/400]
+loss 0.0643 - iou 0.9443 - val_loss 0.1859 - val_iou 0.8154
+Epoch [359/400]
+loss 0.0644 - iou 0.9437 - val_loss 0.1859 - val_iou 0.8154
+Epoch [360/400]
+loss 0.0643 - iou 0.9448 - val_loss 0.1864 - val_iou 0.8153
+Epoch [361/400]
+loss 0.0642 - iou 0.9449 - val_loss 0.1864 - val_iou 0.8150
+Epoch [362/400]
+loss 0.0639 - iou 0.9456 - val_loss 0.1844 - val_iou 0.8166
+Epoch [363/400]
+loss 0.0641 - iou 0.9439 - val_loss 0.1847 - val_iou 0.8169
+Epoch [364/400]
+loss 0.0643 - iou 0.9452 - val_loss 0.1859 - val_iou 0.8159
+Epoch [365/400]
+loss 0.0639 - iou 0.9452 - val_loss 0.1860 - val_iou 0.8158
+Epoch [366/400]
+loss 0.0635 - iou 0.9461 - val_loss 0.1856 - val_iou 0.8159
+Epoch [367/400]
+loss 0.0635 - iou 0.9459 - val_loss 0.1881 - val_iou 0.8142
+Epoch [368/400]
+loss 0.0640 - iou 0.9454 - val_loss 0.1862 - val_iou 0.8160
+Epoch [369/400]
+loss 0.0640 - iou 0.9449 - val_loss 0.1869 - val_iou 0.8151
+Epoch [370/400]
+loss 0.0636 - iou 0.9459 - val_loss 0.1848 - val_iou 0.8166
+Epoch [371/400]
+loss 0.0634 - iou 0.9460 - val_loss 0.1872 - val_iou 0.8152
+Epoch [372/400]
+loss 0.0635 - iou 0.9458 - val_loss 0.1868 - val_iou 0.8153
+Epoch [373/400]
+loss 0.0635 - iou 0.9466 - val_loss 0.1867 - val_iou 0.8153
+Epoch [374/400]
+loss 0.0638 - iou 0.9458 - val_loss 0.1856 - val_iou 0.8159
+Epoch [375/400]
+loss 0.0660 - iou 0.9436 - val_loss 0.1843 - val_iou 0.8167
+Epoch [376/400]
+loss 0.0636 - iou 0.9460 - val_loss 0.1846 - val_iou 0.8168
+Epoch [377/400]
+loss 0.0640 - iou 0.9449 - val_loss 0.1843 - val_iou 0.8158
+Epoch [378/400]
+loss 0.0632 - iou 0.9460 - val_loss 0.1853 - val_iou 0.8162
+Epoch [379/400]
+loss 0.0634 - iou 0.9464 - val_loss 0.1856 - val_iou 0.8155
+Epoch [380/400]
+loss 0.0634 - iou 0.9460 - val_loss 0.1861 - val_iou 0.8162
+Epoch [381/400]
+loss 0.0632 - iou 0.9462 - val_loss 0.1857 - val_iou 0.8166
+Epoch [382/400]
+loss 0.0635 - iou 0.9457 - val_loss 0.1861 - val_iou 0.8161
+Epoch [383/400]
+loss 0.0633 - iou 0.9467 - val_loss 0.1870 - val_iou 0.8158
+Epoch [384/400]
+loss 0.0637 - iou 0.9456 - val_loss 0.1865 - val_iou 0.8166
+Epoch [385/400]
+loss 0.0635 - iou 0.9463 - val_loss 0.1863 - val_iou 0.8158
+Epoch [386/400]
+loss 0.0635 - iou 0.9460 - val_loss 0.1858 - val_iou 0.8162
+Epoch [387/400]
+loss 0.0637 - iou 0.9458 - val_loss 0.1846 - val_iou 0.8166
+Epoch [388/400]
+loss 0.0634 - iou 0.9456 - val_loss 0.1856 - val_iou 0.8156
+Epoch [389/400]
+loss 0.0633 - iou 0.9457 - val_loss 0.1846 - val_iou 0.8168
+Epoch [390/400]
+loss 0.0638 - iou 0.9461 - val_loss 0.1871 - val_iou 0.8150
+Epoch [391/400]
+loss 0.0634 - iou 0.9469 - val_loss 0.1862 - val_iou 0.8160
+Epoch [392/400]
+loss 0.0638 - iou 0.9456 - val_loss 0.1863 - val_iou 0.8155
+Epoch [393/400]
+loss 0.0637 - iou 0.9454 - val_loss 0.1851 - val_iou 0.8158
+Epoch [394/400]
+loss 0.0631 - iou 0.9469 - val_loss 0.1864 - val_iou 0.8157
+Epoch [395/400]
+loss 0.0641 - iou 0.9450 - val_loss 0.1856 - val_iou 0.8160
+Epoch [396/400]
+loss 0.0632 - iou 0.9467 - val_loss 0.1872 - val_iou 0.8152
+Epoch [397/400]
+loss 0.0630 - iou 0.9471 - val_loss 0.1882 - val_iou 0.8155
+Epoch [398/400]
+loss 0.0636 - iou 0.9460 - val_loss 0.1860 - val_iou 0.8157
+Epoch [399/400]
+loss 0.0635 - iou 0.9462 - val_loss 0.1862 - val_iou 0.8161

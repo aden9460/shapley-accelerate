@@ -1,0 +1,91 @@
+UNext(
+  (encoder1): Conv2d(3, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (encoder2): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (encoder3): Conv2d(32, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (ebn1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (ebn2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (ebn3): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (norm3): LayerNorm((160,), eps=1e-05, elementwise_affine=True)
+  (norm4): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+  (dnorm3): LayerNorm((160,), eps=1e-05, elementwise_affine=True)
+  (dnorm4): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+  (block1): ModuleList(
+    (0): shiftedBlock(
+      (drop_path): Identity()
+      (norm2): LayerNorm((160,), eps=1e-05, elementwise_affine=True)
+      (mlp): shiftmlp(
+        (fc1): Linear(in_features=160, out_features=160, bias=True)
+        (dwconv): DWConv(
+          (dwconv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=160)
+        )
+        (act): GELU(approximate='none')
+        (fc2): Linear(in_features=160, out_features=160, bias=True)
+        (drop): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (block2): ModuleList(
+    (0): shiftedBlock(
+      (drop_path): Identity()
+      (norm2): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+      (mlp): shiftmlp(
+        (fc1): Linear(in_features=256, out_features=256, bias=True)
+        (dwconv): DWConv(
+          (dwconv): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=256)
+        )
+        (act): GELU(approximate='none')
+        (fc2): Linear(in_features=256, out_features=256, bias=True)
+        (drop): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (dblock1): ModuleList(
+    (0): shiftedBlock(
+      (drop_path): Identity()
+      (norm2): LayerNorm((160,), eps=1e-05, elementwise_affine=True)
+      (mlp): shiftmlp(
+        (fc1): Linear(in_features=160, out_features=160, bias=True)
+        (dwconv): DWConv(
+          (dwconv): Conv2d(160, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=160)
+        )
+        (act): GELU(approximate='none')
+        (fc2): Linear(in_features=160, out_features=160, bias=True)
+        (drop): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (dblock2): ModuleList(
+    (0): shiftedBlock(
+      (drop_path): Identity()
+      (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+      (mlp): shiftmlp(
+        (fc1): Linear(in_features=128, out_features=128, bias=True)
+        (dwconv): DWConv(
+          (dwconv): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=128)
+        )
+        (act): GELU(approximate='none')
+        (fc2): Linear(in_features=128, out_features=128, bias=True)
+        (drop): Dropout(p=0.0, inplace=False)
+      )
+    )
+  )
+  (patch_embed3): OverlapPatchEmbed(
+    (proj): Conv2d(128, 160, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+    (norm): LayerNorm((160,), eps=1e-05, elementwise_affine=True)
+  )
+  (patch_embed4): OverlapPatchEmbed(
+    (proj): Conv2d(160, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+    (norm): LayerNorm((256,), eps=1e-05, elementwise_affine=True)
+  )
+  (decoder1): Conv2d(256, 160, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (decoder2): Conv2d(160, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (decoder3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (decoder4): Conv2d(32, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (decoder5): Conv2d(16, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (dbn1): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (dbn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (dbn3): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (dbn4): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (final): Conv2d(16, 1, kernel_size=(1, 1), stride=(1, 1))
+  (soft): Softmax(dim=1)
+)

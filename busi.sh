@@ -1,0 +1,13 @@
+#!/bin/bash
+
+python train.py --dataset /opt/data/private/datasets/busi --arch UNet --name new_busi_3classes_unet_random_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet/model.pth --pruning --strategy random > new_busi_3classes_unet_random_flops_50.txt
+python train.py --dataset /opt/data/private/datasets/busi --arch NestedUNet --name new_busi_3classes_unet++_random_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet++/model.pth --pruning --strategy random > new_busi_3classes_unet++_random_flops_50.txt
+
+python train.py --dataset /opt/data/private/datasets/busi --arch UNet --name new_busi_3classes_unet_l1_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet/model.pth --pruning --strategy l1 > new_busi_3classes_unet_l1_flops_50.txt
+python train.py --dataset /opt/data/private/datasets/busi --arch NestedUNet --name new_busi_3classes_unet++_l1_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet++/model.pth --pruning --strategy l1 > new_busi_3classes_unet++_l1_flops_50.txt
+
+python train.py --dataset /opt/data/private/datasets/busi --arch UNet --name new_busi_3classes_unet_rank_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet/model.pth --pruning --strategy rank > new_busi_3classes_unet_rank_flops_50.txt
+python train.py --dataset /opt/data/private/datasets/busi --arch NestedUNet --name new_busi_3classes_unet++_rank_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet++/model.pth --pruning --strategy rank > new_busi_3classes_unet++_rank_flops_50.txt
+
+python train.py --dataset /opt/data/private/datasets/busi --arch UNet --name new_busi_3classes_unet_shapley_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet/model.pth --pruning --strategy shapley > new_busi_3classes_unet_shapley_flops_50.txt
+python train.py --dataset /opt/data/private/datasets/busi --arch NestedUNet --name new_busi_3classes_unet++_shapley_flops_50 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 --pretrain --pretrain-path models/busi_3classes_unet++/model.pth --pruning --strategy shapley > new_busi_3classes_unet++_shapley_flops_50.txt

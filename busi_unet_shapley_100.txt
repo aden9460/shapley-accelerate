@@ -1,0 +1,58 @@
+/opt/conda/envs/u_shapley/lib/python3.8/site-packages/albumentations/__init__.py:13: UserWarning: A new version of Albumentations is available: 1.4.15 (you have 1.4.14). Upgrade using: pip install -U albumentations. To disable automatic update checks, set the environment variable NO_ALBUMENTATIONS_UPDATE to 1.
+  check_for_updates()
+--------------------
+name: busi_unet_shapley_100
+epochs: 400
+batch_size: 8
+arch: UNet
+deep_supervision: False
+input_channels: 3
+num_classes: 1
+input_w: 256
+input_h: 256
+loss: BCEDiceLoss
+dataset: /opt/data/private/wzf/u_shapley/Dataset_BUSI_with_GT/benign
+img_ext: .png
+mask_ext: _mask.png
+optimizer: Adam
+lr: 0.001
+momentum: 0.9
+weight_decay: 0.0001
+nesterov: False
+scheduler: CosineAnnealingLR
+min_lr: 1e-05
+factor: 0.1
+patience: 2
+milestones: 1,2
+gamma: 0.6666666666666666
+early_stopping: -1
+cfg: None
+num_workers: 4
+pruning: False
+debug: False
+strategy: random
+pruning_percentage: 0.3
+pretrain: False
+pretrain_path: None
+sample_ratio: None
+--------------------
+[INFO] Register zero_ops() for <class 'torch.nn.modules.pooling.MaxPool2d'>.
+[INFO] Register count_upsample() for <class 'torch.nn.modules.upsampling.Upsample'>.
+[INFO] Register zero_ops() for <class 'torch.nn.modules.activation.ReLU'>.
+[INFO] Register count_convNd() for <class 'torch.nn.modules.conv.Conv2d'>.
+[INFO] Register count_normalization() for <class 'torch.nn.modules.batchnorm.BatchNorm2d'>.
+Original FLOPs: 14.101G
+Original Params: 7.853M
+/opt/data/private/wzf/u_shapley/Dataset_BUSI_with_GT/benign/images.png
+Traceback (most recent call last):
+  File "train.py", line 425, in <module>
+    main()
+  File "train.py", line 259, in main
+    train_img_ids, val_img_ids = train_test_split(img_ids, test_size=0.2, random_state=None,shuffle=False)
+  File "/opt/conda/envs/u_shapley/lib/python3.8/site-packages/sklearn/utils/_param_validation.py", line 214, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/conda/envs/u_shapley/lib/python3.8/site-packages/sklearn/model_selection/_split.py", line 2649, in train_test_split
+    n_train, n_test = _validate_shuffle_split(
+  File "/opt/conda/envs/u_shapley/lib/python3.8/site-packages/sklearn/model_selection/_split.py", line 2305, in _validate_shuffle_split
+    raise ValueError(
+ValueError: With n_samples=0, test_size=0.2 and train_size=None, the resulting train set will be empty. Adjust any of the aforementioned parameters.

@@ -1,0 +1,1 @@
+python train.py --dataset /opt/data/private/wzf/u_shapley/Dataset_BUSI_with_GT --arch UNet --name busi_unet_shapley_100 --img_ext .png --mask_ext .png --lr 0.001 --epochs 400 --b 8 --input_w 256 --input_h 256 
