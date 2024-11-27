@@ -11,6 +11,7 @@ import math
 import numpy as np
 from collections import OrderedDict
 from ..utils.compute_mat_grad import ComputeMatGrad
+import logging
 
 __all__ = [
     # Base Class
@@ -30,6 +31,7 @@ __all__ = [
     "BNScaleImportance",
     "LAMPImportance",
     "RandomImportance",
+    "ShapleyImportance"
 ]
 
 class Importance(abc.ABC):
@@ -817,3 +819,290 @@ class TaylorImportance(GroupTaylorImportance):
 
 class HessianImportance(GroupHessianImportance):
     pass
+
+
+
+from torch.nn.modules.conv import _ConvNd
+from torch.nn.modules.activation import ReLU, ReLU6, RReLU, LeakyReLU, Sigmoid, Softplus, Tanh
+
+import logging
+
+from abc import ABC, abstractmethod
+
+SUPPORTED_OUT_PRUNING_MODULES = [nn.Linear, _ConvNd]
+ACTIVATIONS = [ReLU, ReLU6, RReLU, LeakyReLU, Sigmoid, Softplus, Tanh]
+from torchpruner.attributions import ShapleyAttributionMetric
+
+class ShapleyImportance(GroupNormImportance,ShapleyAttributionMetric):
+
+    def __init__(self,
+                 model: nn.Module,
+                 criterion,
+                 data_gen ,
+                 group_reduction:str="mean", 
+                 normalizer:str='mean', 
+                 multivariable:bool=False, 
+                 bias=False,
+                 sv_samples=1,
+                 target_types:list=[nn.modules.conv._ConvNd, nn.Linear, nn.modules.batchnorm._BatchNorm, nn.modules.LayerNorm]):
+        self.group_reduction = group_reduction
+        self.normalizer = normalizer
+        self.multivariable = multivariable
+        self.target_types = target_types
+        self.bias = bias
+        
+
+        self.samples = sv_samples
+        self.model = model
+        self.data_gen = data_gen
+        self.device =torch.device("cuda" )
+        self.criterion=criterion
+        self.reduction = "mean"
+    @torch.no_grad()
+    def __call__(self, group):
+        group_imp = []
+        group_idxs = []
+        for i, (dep, idxs) in enumerate(group):
+            idxs.sort()
+            layer = dep.target.module
+            prune_fn = dep.handler
+            root_idxs = group[i].root_idxs
+
+            if not isinstance(layer, tuple(self.target_types)):
+                continue
+            
+            # Conv/Linear Output
+            if prune_fn in [
+                function.prune_conv_out_channels,
+                function.prune_linear_out_channels,
+            ]:
+                local_imp=self.run(layer)
+                local_imp= torch.tensor(local_imp)
+                group_imp.append(local_imp)
+                group_idxs.append(root_idxs)
+
+
+                # if hasattr(layer, "transposed") and layer.transposed:
+                #     w = layer.weight.data.transpose(1, 0)[idxs].flatten(1)
+                #     dw = layer.weight.grad.data.transpose(1, 0)[
+                #         idxs].flatten(1)
+                # else:
+                #     w = layer.weight.data[idxs].flatten(1)
+                #     dw = layer.weight.grad.data[idxs].flatten(1)
+                # if self.multivariable:
+                #     local_imp = (w * dw).sum(1).abs()
+                # else:
+                #     local_imp = (w * dw).abs().sum(1)
+                # group_imp.append(local_imp)
+                # group_idxs.append(root_idxs)
+
+                # if self.bias and layer.bias is not None:
+                #     b = layer.bias.data[idxs]
+                #     db = layer.bias.grad.data[idxs]
+                #     local_imp = (b * db).abs()
+                #     group_imp.append(local_imp)
+                #     group_idxs.append(root_idxs)
+                    
+        #     # Conv/Linear Input
+        #     elif prune_fn in [
+        #         function.prune_conv_in_channels,
+        #         function.prune_linear_in_channels,
+        #     ]:
+        #         if hasattr(layer, "transposed") and layer.transposed:
+        #             w = (layer.weight).flatten(1)
+        #             dw = (layer.weight.grad).flatten(1)
+        #         else:
+        #             w = (layer.weight).transpose(0, 1).flatten(1)
+        #             dw = (layer.weight.grad).transpose(0, 1).flatten(1)
+        #         if self.multivariable:
+        #             local_imp = (w * dw).sum(1).abs()
+        #         else:
+        #             local_imp = (w * dw).abs().sum(1)
+                
+        #         # repeat importance for group convolutions
+        #         if prune_fn == function.prune_conv_in_channels and layer.groups != layer.in_channels and layer.groups != 1:
+        #             local_imp = local_imp.repeat(layer.groups)
+        #         local_imp = local_imp[idxs]
+
+        #         group_imp.append(local_imp)
+        #         group_idxs.append(root_idxs)
+
+        #     # BN
+        #     elif prune_fn == function.prune_groupnorm_out_channels:
+        #         # regularize BN
+        #         if layer.affine:
+        #             w = layer.weight.data[idxs]
+        #             dw = layer.weight.grad.data[idxs]
+        #             local_imp = (w*dw).abs()
+        #             group_imp.append(local_imp)
+        #             group_idxs.append(root_idxs)
+
+        #             if self.bias and layer.bias is not None:
+        #                 b = layer.bias.data[idxs]
+        #                 db = layer.bias.grad.data[idxs]
+        #                 local_imp = (b * db).abs()
+        #                 group_imp.append(local_imp)
+        #                 group_idxs.append(root_idxs)
+            
+        #     # LN
+        #     elif prune_fn == function.prune_layernorm_out_channels:
+        #         if layer.elementwise_affine:
+        #             w = layer.weight.data[idxs]
+        #             dw = layer.weight.grad.data[idxs]
+        #             local_imp = (w*dw).abs()
+        #             group_imp.append(local_imp)
+        #             group_idxs.append(root_idxs)
+        #             if self.bias and layer.bias is not None:
+        #                 b = layer.bias.data[idxs]
+        #                 db = layer.bias.grad.data[idxs]
+        #                 local_imp = (b * db).abs()
+        #                 group_imp.append(local_imp)
+        #                 group_idxs.append(root_idxs)
+        # if len(group_imp) == 0: # skip groups without parameterized layers
+        #     return None
+        group_imp = self._reduce(group_imp, group_idxs)
+        group_imp = self._normalize(group_imp, self.normalizer)
+
+        return group_imp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #     self.mask_indices = []
+
+
+    # def _find_best_module_for_attributions(model, module):
+    #     """
+    #     Given a Linear or Convolutional module, this method checks if the module
+    #     if followed by either BatchNormalization and/or a non-linearity.
+    #     In this case, returns the last of these modules as better location
+    #     to compute attributions on.
+    #     :param model: PyTorch module containing module
+    #     :param module: PyTorch Linear or Conv module
+    #     :return:
+    #     """
+    #     modules = list(model.modules())
+    #     try:
+    #         current_idx = modules.index(module)
+    #         eval_module = module
+    #         for next_module in modules[current_idx+1:]:
+    #             if isinstance(next_module, nn.modules.batchnorm._BatchNorm):
+    #                 print(f"BatchNorm detected: shifting evaluation after {next_module}")
+    #                 eval_module = next_module
+    #             elif any([isinstance(next_module, t) for t in torch.nn.modules.activation.ReLU]):
+    #                 print(f"Activation detected: shifting evaluation after {next_module}")
+    #                 eval_module = next_module
+    #             else:
+    #                 return eval_module
+    #     except ValueError:
+    #         logging.error("Provided module is not in model")
+    #     return module
+
+
+    # def _run(self, module, **kwargs):
+    #     assert any(
+    #         [isinstance(module, t) for t in self.target_types]
+    #     ), f"Attributions can be computed only for the following modules {self.target_types}"
+    #     return self._find_evaluation_module(module, **kwargs)
+
+    # def _find_evaluation_module(self, module, find_best_evaluation_module=False):
+    #     if find_best_evaluation_module is True:
+    #         return self._find_best_module_for_attributions(self.model, module)
+    #     else:
+    #         return module
+
+    # def run(self, module, sv_samples=None, **kwargs):
+    #     module = self._run(module, **kwargs)
+    #     sv_samples = sv_samples if sv_samples is not None else self.samples
+    #     if hasattr(self.model, "forward_partial"):
+    #         result = self._run_module_with_partial(module, sv_samples)
+    #     else:
+    #         logging.warning("Consider adding a 'forward_partial' method to your model to speed-up Shapley values "
+    #                         "computation")
+    #         result = self._run_module(module, sv_samples)
+    #     return result
+
+    # def _run_module_with_partial(self, module, sv_samples):
+    #     """
+    #     Implementation of Shapley value monte carlo sampling for models
+    #     that provides a `forward_partial` function. This is significantly faster
+    #     than run_module(), as it only runs the forward pass on the necessary modules.
+    #     """
+    #     d = len(self.data_gen.dataset)
+    #     sv = None
+    #     permutations = None
+    #     c = 0
+
+    #     with torch.no_grad():
+    #         for idx, (x, y) in enumerate(self.data_gen):
+    #             x, y = x.to(self.device), y.to(self.device)
+    #             original_z, _ = self.run_forward_partial(x, to_module=module)
+    #             _, original_loss = self.run_forward_partial(original_z, y_true=y, from_module=module)
+    #             n = original_z.shape[1]  # prunable dimension
+    #             if permutations is None:
+    #                 # Keep the same permutations for all batches
+    #                 permutations = [np.random.permutation(n) for _ in range(sv_samples)]
+    #             if sv is None:
+    #                 sv = np.zeros((d, n))
+
+    #             for j in range(sv_samples):
+    #                 loss = original_loss.detach().clone()
+    #                 z = original_z.clone().detach()
+
+    #                 for i in permutations[j]:
+    #                     z.index_fill_(1, torch.tensor(np.array([i])).long().to(self.device), 0.0)
+    #                     _, new_loss = self.run_forward_partial(z, y_true=y, from_module=module)
+    #                     delta = new_loss - loss
+    #                     n = delta.shape[0]
+    #                     sv[c:c+n, i] += (delta / sv_samples).squeeze().detach().cpu().numpy()
+    #                     loss = new_loss
+    #             c += n
+
+    #         return self.aggregate_over_samples(sv)
+
+    # def _run_module(self, module, samples):
+    #     """
+    #     Implementation of Shapley value monte carlo sampling.
+    #     No further changes to the model are necessary but this can be quite slow.
+    #     See run_module_with_partial() for a faster version that uses partial evaluation.
+    #     """
+    #     with torch.no_grad():
+    #         self.mask_indices = []
+    #         handle = module.register_forward_hook(self._forward_hook())
+    #         original_loss = self.run_all_forward()
+    #         n = module._tp_prune_dim  # output dimension
+    #         sv = np.zeros((original_loss.shape[0], n))
+
+    #         for j in range(samples):
+    #             # print (f"Sample {j}")
+    #             self.mask_indices = []
+    #             loss = original_loss.detach().clone()
+    #             for i in np.random.permutation(n):
+    #                 self.mask_indices.append(i)
+    #                 new_loss = self.run_all_forward()
+    #                 sv[:, i] += ((new_loss - loss) / samples).squeeze().detach().cpu().numpy()
+    #                 loss = new_loss
+
+    #         handle.remove()
+    #         return self.aggregate_over_samples(sv)
+
+    # def _forward_hook(self):
+    #     def _hook(module, _, output):
+    #         module._tp_prune_dim = output.shape[1]
+    #         return output.index_fill_(
+    #             1, torch.tensor(self.mask_indices).long().to(self.device), 0.0,
+    #         )
+
+    #     return _hook
+       

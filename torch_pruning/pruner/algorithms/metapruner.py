@@ -241,7 +241,7 @@ class MetaPruner:
         #if self.global_pruning:
         initial_total_channels = 0
         initial_total_heads = 0
-        for group in self.DG.get_all_groups(ignored_layers=self.ignored_layers, root_module_types=self.root_module_types):
+        for group in self.DG.get_all_groups(ignored_layers=self.ignored_layers, root_module_types=self.root_module_types):##从最后一个模块开始遍历
             group = self._downstream_node_as_root_if_attention(group)
             initial_total_channels += ( (self.DG.get_out_channels(group[0][0].target.module) ) // self._get_channel_groups(group) )
             for dep, _ in group:
@@ -503,11 +503,14 @@ class MetaPruner:
 
             if not self.global_pruning:
                 assert len(ranking_scope[scope_name])<=1, "Internal Error: local pruning should only contain less than one layer per scope."
-
+            concat_imp = []
             records = ranking_scope[scope_name] # records[i] -> (group, ch_groups, group_size, pruning_ratio, dim_imp)_i
             # Find the threshold for pruning
             if len(records)>0:
                 concat_imp = torch.cat([local_imp[-1] for local_imp in records], dim=0) # concatenate importance scores in this scope
+                # concat_imp.append([local_imp[-1] for local_imp in records])
+                # concat_imp = torch.tensor(concat_imp)
+
                 target_pruning_ratio = records[0][-2] # records[i] -> (group, ch_groups, group_size, pruning_ratio, dim_imp)_i
                 if scope_name not in self._scope_initial_channels:
                     self._scope_initial_channels[scope_name] = len(concat_imp)
